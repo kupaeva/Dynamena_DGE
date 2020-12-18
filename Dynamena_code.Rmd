@@ -1,0 +1,442 @@
+---
+title: "Dynamena pumila project"
+author: "Kupaeva DM"
+date: "15 12 2020"
+output: html_document
+---
+# Reference assembly
+In this step we used next libraries: 
+* pre-prepared data from different stages of development *Dynamena pumila* colony, NGS paired reads, 150 nt long;
+* 3 library with sequences from growing tip, 100 nt, single end;
+* 3 library with sequences from hydrant, 100 nt, single end;
+* 3 library with sequences from growing tip, 100 nt, single end, alternative way of dna extraction.
+
+## Data preparing:
+
+Trimming adapters and bad-quality bases:   
+
+``` {}
+/home/kremnyov-lab/Загрузки/fastp -i /media/kremnyov-lab/data2/20080351/fastq/3_ACTTGAAT_L001_R1_001.fastq --out1 /media/kremnyov-lab/data2/20080351/fastq/3_fastp.fastq -l 36 -f 12 --adapter_sequence ACTTGAAT -h 3_fastp
+
+```
+
+Kraken databases preparing:
+
+``` {}
+/media/kremnyov-lab/data2/kracken_db/kraken2-master/scripts/kraken2-build --download-taxonomy --db /media/kremnyov-lab/data2/kracken_db/kracken_custom
+
+/media/kremnyov-lab/data2/kracken_db/kraken2-master/scripts/kraken2-build --download-library plant --db /media/kremnyov-lab/data2/kracken_db/kracken_custom
+
+/media/kremnyov-lab/data2/kracken_db/kraken2-master/scripts/kraken2-build --build --db /media/kremnyov-lab/data2/kracken_db/kracken_custom
+```
+
+Filtering contamination: 
+
+``` {}
+/media/kremnyov-lab/data2/kracken_db/kraken2-master/scripts/kraken2 --db /media/kremnyov-lab/data2/kracken_db/kracken_custom --fastq-input 1_fastp.fastq --threads 15 --classified-out 1_contaminat.fastq --unclassified-out 1_dif_kraken.fastq
+```
+
+By the reason of limited computing resources, before assembly we prepare digital normalization of our data:
+
+``` {}
+/media/kremnyov-lab/data2/bbmap/bbnorm.sh in=/media/kremnyov-lab/data2/20080351/fastq/1_dif_kraken.fastq  out=/media/kremnyov-lab/data2/20080351/fastq/*_dif_norm.fastq
+```
+
+## Transcroptome assembly and check quality of data:
+
+``` {}
+/home/kremnyov-lab/Загрузки/SPAdes-3.14.1-Linux/bin/spades.py --rna -1 /media/kremnyov-lab/DATA/19062651/fastq/dynamena_transcriptome/dynamena_norm_21.fastq -2 /media/kremnyov-lab/DATA/19062651/fastq/dynamena_transcriptome/dynamena_norm_22.fastq --s4 /media/kremnyov-lab/data2/20080351/fastq/4_dif_norm.fastq --s5 /media/kremnyov-lab/data2/20080351/fastq/5_dif_norm.fastq --s6 /media/kremnyov-lab/data2/20080351/fastq/6_dif_norm.fastq --s7 /media/kremnyov-lab/data2/20080351/fastq/7_dif_norm.fastq --s8 /media/kremnyov-lab/data2/20080351/fastq/8_dif_norm.fastq --s9 /media/kremnyov-lab/data2/20080351/fastq/9_dif_norm.fastq --s1 /media/kremnyov-lab/data2/20080351/fastq/10_dif_norm.fastq --s2 /media/kremnyov-lab/data2/20080351/fastq/11_dif_norm.fastq --s3 /media/kremnyov-lab/data2/20080351/fastq/12_dif_norm.fastq -o /media/kremnyov-lab/data2/20080351/fastq/dt_spades -t 15
+
+/home/kremnyov-lab/Загрузки/trinityrnaseq-v2.8.6/util/TrinityStats.pl /media/kremnyov-lab/data2/20080351/fastq/dt_spades/hard_filtered_transcripts.fasta
+```
+
+For estimate basic statistics of assembly we used app from Trinity assembler:
+
+``` {}
+/home/kremnyov-lab/Загрузки/trinityrnaseq-v2.8.6/util/TrinityStats.pl /media/kremnyov-lab/data2/20080351/fastq/dt_spades/hard_filtered_transcripts.fasta
+```
+```
+################################
+Counts of transcripts, etc.
+################################
+Total trinity 'genes':	98592
+Total trinity transcripts:	98592
+Percent GC: 38.16
+
+########################################
+Stats based on ALL transcript contigs:
+########################################
+
+Contig N10: 7777
+Contig N20: 5615
+Contig N30: 4443
+Contig N40: 3659
+Contig N50: 3041
+
+Median contig length: 1278
+Average contig: 1877.16
+Total assembled bases: 185073139
+```
+
+For estimate transcriptome completeness we used BUSCO with metazoa genes databases: 
+
+``` {}
+python3 /media/kremnyov-lab/DATA/19062651/busco-master/scripts/run_BUSCO.py -i /media/kremnyov-lab/data2/20080351/fastq/dt_spades/hard_filtred_transcripts.fasta -o BUSCO_hard_spades -l /media/kremnyov-lab/DATA/19062651/busco-master/metazoa_odb9 -m tran -c 5
+```
+
+```
+C:95.9%[S:43.9%,D:52.0%],F:1.0%,M:3.1%,n:978
+
+938	Complete BUSCOs (C)
+429	Complete and single-copy BUSCOs (S)
+509	Complete and duplicated BUSCOs (D)
+10	Fragmented BUSCOs (F)
+30	Missing BUSCOs (M)
+978	Total BUSCO groups searched
+```
+## Transcriptome filtering
+For filtering reference transcriptome we used CD-HIT-EST, which cluster sequences and filtered sequences which are similar than 0.9.
+
+``` {}
+./cd-hit-est -i /media/kremnyov-lab/data2/20080351/fastq/hf_transcripts.fasta -o /media/kremnyov-lab/data2/20080351/fastq/hhf_transcripts.fasta -T 15
+```
+
+And we translated transcriptome:
+
+``` {}
+/home/kremnyov-lab/miniconda3/bin/TransDecoder.LongOrfs -t./hhf_transcripts.fasta -m 100 --output_dir ./orfs
+
+/home/kremnyov-lab/miniconda3/bin/TransDecoder.Predict -t /media/kremnyov-lab/DATA/19062651/fastq/dynamena_transcriptome/transcripts_1306.fasta --output_dir /media/kremnyov-lab/DATA/19062651/fastq/dynamena_transcriptome/transdecoder
+```
+
+
+# Annotation of reference transcrioptome
+
+For annotation we used:
+* EggNog web-serwer 
+* Trinotate pipeline
+
+``` {}
+/home/kupaeva/miniconda3/bin/Build_Trinotate_Boilerplate_SQLite_db.pl Trinotate
+
+makeblastdb -in uniprot_sprot.pep -dbtype prot
+
+gunzip Pfam-A.hmm.gz
+
+hmmpress Pfam-A.hmm
+
+blastx -query hhf_transcripts.fasta -db uniprot_sprot.pep -num_threads 8 -max_target_seqs 1 -outfmt 6 -evalue 1e-3 > blastx.outfmt6
+
+blastp -query longest_orfs.fasta -db uniprot_sprot.pep -num_threads 8 -max_target_seqs 1 -outfmt 6 -evalue 1e-3 > blastp.outfmt6
+
+hmmscan --cpu 5 --domtblout TrinotatePFAM.out Pfam-A.hmm longest_orfs.fasta > pfam.log
+```
+
+* blastp annotation with using SwissProt data 
+
+``` {}
+/home/kremnyov-lab/Загрузки/ncbi-blast-2.10.1+-src/c++/ReleaseMT/bin/blastp -query /media/kremnyov-lab/data2/20080351/fastq/longest_orfs.fasta -outfmt 6 -evalue 1e-30 -db /media/kremnyov-lab/DATA/blastdb/swissprot/swissprot -num_threads 15 -out /media/kremnyov-lab/data2/20080351/fastq/swissprot_attotation
+```
+
+* blastp annotation with using *Clytia hemisphaerica* annotation  
+
+``` {}
+/home/kremnyov-lab/Загрузки/ncbi-blast-2.10.1+-src/c++/ReleaseMT/bin/blastp -query /media/kremnyov-lab/data2/20080351/fastq/longest_orfs.fasta -outfmt 6 -evalue 1e-30 -db /media/kremnyov-lab/data2/20080351/fastq/annotation/clytia.fasta -num_threads 15 -out /media/kremnyov-lab/data2/20080351/fastq/annotation/clytia.outfmt6
+```
+
+All annotations were assembled into a single file using the following script:
+
+1. Read tramscript names and spaDES 'gene' names: 
+``` {r, message=FALSE}
+
+library(dplyr)
+library(tidyverse)
+
+gene_name <- read.csv('/media/kremnyov-lab/data2/20080351/fastq/gene_name.csv', 
+                      colClasses = c('character', 'character', 'character'))
+gene_name_transcripts <- gene_name[3]
+gene_name_transcripts$gene <- gene_name$t.gene_list_df.
+
+```
+
+Read all EggNOG annotation and combine it with transcript list:
+
+``` {r}
+annotation1 <- read.csv("/media/kremnyov-lab/data2/20080351/fastq/annotation/job_MM_06ilteyk_annotations.tsv", skip = "4", 
+                       sep = "", header = F)
+annotation1$V23 <- lapply(strsplit(as.character(annotation1$V1), "_"),"[",7)
+annotation_final <- data.frame (gene = 1:2296, name = LETTERS[1:1], number = LETTERS[1:1], full_name = LETTERS[1:1])
+annotation_final$gene <- annotation1$V23
+annotation_final$name = annotation1$V6
+annotation_final$number = annotation1$V1
+annotation_final$full_name = annotation1$V22
+annotation_final$GO_term = annotation1$V7
+
+
+annotation <- read.csv("/media/kremnyov-lab/data2/20080351/fastq/annotation/job_MM_2plawbm3_annotations.tsv", skip = 4, 
+                       sep = "\t", header = F)
+annotation$V23 <- lapply(strsplit(as.character(annotation$V1), "_"),"[",7)
+annotation_2 <- data.frame (gene = 1:2071, name = LETTERS[1:1], number = LETTERS[1:1],full_name = LETTERS[1:1])
+annotation_2$gene <- annotation$V23
+annotation_2$number = annotation$V1
+annotation_2$name = annotation$V6
+annotation_2$full_name = annotation$V22
+annotation_2$GO_term = annotation$V7
+
+annotation_final <- rbind(annotation_final, annotation_2)
+
+
+annotation <- read.csv("/media/kremnyov-lab/data2/20080351/fastq/annotation/job_MM_gfla6356_annotations.tsv", skip = 4, 
+                       sep = "\t", header = F)
+annotation$V23 <- lapply(strsplit(as.character(annotation$V1), "_"),"[",7)
+annotation_2 <- data.frame (gene = 1:33363, name = LETTERS[1:1], number = LETTERS[1:1],full_name = LETTERS[1:1])
+annotation_2$gene <- annotation$V23
+annotation_2$number = annotation$V1
+annotation_2$name = annotation$V6
+annotation_2$full_name = annotation$V22
+annotation_2$GO_term = annotation$V7
+annotation_final <- rbind(annotation_final, annotation_2)
+
+annotation <- read.csv("/media/kremnyov-lab/data2/20080351/fastq/annotation/job_MM_ou6utwtx_annotations.tsv", skip = 4, 
+                       sep = "\t", header = F)
+annotation$V23 <- lapply(strsplit(as.character(annotation$V1), "_"),"[",7)
+annotation_2 <- data.frame (gene = 1:1043, name = LETTERS[1:1], number = LETTERS[1:1],full_name = LETTERS[1:1])
+annotation_2$gene <- annotation$V23
+annotation_2$number = annotation$V1
+annotation_2$name = annotation$V6
+annotation_2$full_name = annotation$V22
+annotation_2$GO_term = annotation$V7
+annotation_final <- rbind(annotation_final, annotation_2)
+
+annotation_final <- apply(annotation_final,2,as.character)
+
+annotation = left_join(gene_name_transcripts, annotation_final, by=c("transcript"="number"), copy = T)
+
+```
+
+Read annotation, preparing by Trinotate pipeline: 
+
+``` {r}
+fastp <- read.csv("/media/kremnyov-lab/data2/20080351/fastq/annotation/trinotate/blastp.outfmt6", skip = "4", 
+                       sep = "\t", header = F)
+fastp_unique <- distinct(fastp, V1, .keep_all = T)
+fastp_unique$V1 <-  as.character(fastp_unique$V1)
+fastp_unique$V2 <-  as.character(fastp_unique$V2)
+fastp_unique$V1 <- sapply(strsplit(as.character(fastp_unique$V1), ".p"),"[",1)
+
+fastp_unique_valuable <- subset(fastp_unique, fastp_unique$V11 < 2.00e-30)
+
+annotation = left_join(annotation, fastp_unique_valuable[1:2], by=c("transcript"="V1"), copy = T)
+annotation <- annotation[-2]
+colnames(annotation)[6] <- "blastp"
+
+fastx <- read.csv("/media/kremnyov-lab/data2/20080351/fastq/annotation/trinotate/blastx.outfmt6", skip = "4", 
+                  sep = "\t", header = F)
+fastx_unique <- distinct(fastx, V1, .keep_all = T)
+fastx_unique$V1 <-  as.character(fastx_unique$V1)
+fastx_unique$V2 <-  as.character(fastx_unique$V2)
+fastx_unique$V1 <- sapply(strsplit(as.character(fastx_unique$V1), ".p"),"[",1)
+fastx_unique_valuable <- subset(fastx_unique, fastx_unique$V11 < 2.00e-30)
+
+annotation = left_join(annotation, fastx_unique_valuable[1:2], by=c("transcript"="V1"), copy = T)
+colnames(annotation)[7] <- "blastx"
+
+pfam <- read.csv("/media/kremnyov-lab/data2/20080351/fastq/annotation/trinotate/TrinotatePFAM1.out", skip = 4, 
+                  sep = "", header = F)
+pfam$V4 <- sapply(strsplit(as.character(pfam$V4), ".p"),"[",1)
+pfam_unique <- distinct(pfam, V4, .keep_all = T)
+pfam_unique$V1 <-  as.character(pfam_unique$V1)
+pfam_unique$V2 <-  as.character(pfam_unique$V2)
+pfam_unique$V4 <-  as.character(pfam_unique$V4)
+
+annotation = left_join(annotation, pfam_unique[c(1, 2, 4)], by=c("transcript"="V4"), copy = T)
+colnames(annotation)[8] <- "PFAM_name"
+colnames(annotation)[9] <- "PFAM_number"
+
+```
+
+Read annotation by *Clytia* transcriptome: 
+
+```{r}
+clytia_blast <- read.csv("/media/kremnyov-lab/data2/20080351/fastq/annotation/clytia.outfmt6", skip = 4, 
+                 sep = "", header = F)
+clytia_blast$V2 <- sapply(strsplit(as.character(clytia_blast$V2), ".p"),"[",1)
+clytia_blast_unique <- distinct(clytia_blast, V2, .keep_all = T)
+clytia_blast$V1 <-  as.character(clytia_blast$V1)
+clytia_blast$V2 <-  as.character(clytia_blast$V2)
+clytia_blast$V4 <-  as.character(clytia_blast$V4)
+annotation = left_join(annotation, clytia_blast_unique[c(1, 2)], by=c("transcript"="V2"), copy = T)
+colnames(annotation)[10] <- "clytia_number"
+
+
+clytia_annotation <- read.csv("/media/kremnyov-lab/data2/20080351/fastq/annotation/clytia_annotation.tsv", skip = 4, 
+                         sep = "\t", header = F)
+clytia_annotation <- data.frame(lapply(clytia_annotation, as.character), stringsAsFactors=FALSE)
+clytia_annotation_unique <- distinct(clytia_annotation, V1, .keep_all = T)
+
+annotation = left_join(annotation, clytia_annotation_unique[c(1, 13, 14)], by=c("clytia_number"="V1"), copy = T)
+colnames(annotation)[11] <- "clytia_gene"
+colnames(annotation)[12] <- "clytia_go"
+
+annotation_unique <- distinct(annotation, transcript, .keep_all = T)
+
+```
+
+Write final file:
+
+``` {r}
+
+write.csv(annotation_unique, file = '/media/kremnyov-lab/data2/20080351/fastq/annotation_final1.csv')
+
+```
+
+
+# Differential expression analysis
+
+For analysis differential expression we used salmon:
+
+``` {}
+salmon index -t hhf_transcripts.fasta -- kmerLen 29 -i dyn_ref_salmon
+
+salmon quant -i /media/kremnyov-lab/data2/20080351/fastq/dyn_ref_salmon  -l ISF -p 15 -r /media/kremnyov-lab/data2/20080351/fastq/data_filtered/4_dif_kraken.fastq -o salmon_4 --discardOrphans --seqBias --gcBias --validateMappings --writeUnmappedNames --gcBias
+
+salmon quant -i /media/kremnyov-lab/data2/20080351/fastq/dyn_ref_salmon  -l ISF -p 15 -r /media/kremnyov-lab/data2/20080351/fastq/data_filtered/5_dif_kraken.fastq -o salmon_5 --discardOrphans --seqBias --gcBias --validateMappings --writeUnmappedNames --gcBias
+
+salmon quant -i /media/kremnyov-lab/data2/20080351/fastq/dyn_ref_salmon  -l ISF -p 15 -r /media/kremnyov-lab/data2/20080351/fastq/data_filtered/6_dif_kraken.fastq -o salmon_6 --discardOrphans --seqBias --gcBias --validateMappings --writeUnmappedNames --gcBias
+
+salmon quant -i /media/kremnyov-lab/data2/20080351/fastq/dyn_ref_salmon  -l ISF -p 15 -r /media/kremnyov-lab/data2/20080351/fastq/data_filtered/7_dif_kraken.fastq -o salmon_7 --discardOrphans --seqBias --gcBias --validateMappings --writeUnmappedNames --gcBias
+
+salmon quant -i /media/kremnyov-lab/data2/20080351/fastq/dyn_ref_salmon  -l ISF -p 15 -r /media/kremnyov-lab/data2/20080351/fastq/data_filtered/8_dif_kraken.fastq -o salmon_8 --discardOrphans --seqBias --gcBias --validateMappings --writeUnmappedNames --gcBias
+
+salmon quant -i /media/kremnyov-lab/data2/20080351/fastq/dyn_ref_salmon  -l ISF -p 15 -r /media/kremnyov-lab/data2/20080351/fastq/data_filtered/9_dif_kraken.fastq -o salmon_9 --discardOrphans --seqBias --gcBias --validateMappings --writeUnmappedNames --gcBias
+```
+
+Process salmon's count by DEseq2: 
+
+``` {r, message=FALSE}
+library("DESeq2")
+library(tximport)
+library(Biostrings)
+library(pcaExplorer)
+library(EnhancedVolcano)
+library(geneplotter)
+library("pheatmap")
+library("RColorBrewer")
+library("vsn")
+
+samples <- read.table(file.path('/media/kremnyov-lab/data2/20080351/fastq',"samples.csv"), header=T, sep = ';')
+files <- file.path('/media/kremnyov-lab/data2/20080351/fastq', samples$run, "quant.sf")
+gene_name <- read.csv('/media/kremnyov-lab/data2/20080351/fastq/gene_name.csv', 
+                      colClasses = c('character', 'character', 'character'))
+
+gene_name$full_name[gene_name$full_name == ''] <- gene_name$name
+gene_name$name[gene_name$name == ''] <- gene_name$gene
+gene_name = gene_name[c(3, 2)]
+
+txi <- tximport(files, type = "salmon", tx2gene = gene_name, 
+                txIn = T, txOut = F,
+                countsFromAbundance = "scaledTPM",
+                txIdCol = "Name",
+                abundanceCol = "TPM",
+                countsCol="NumReads",
+                lengthCol = "Length")
+ddsTxi <- DESeqDataSetFromTximport(txi, colData = samples, design = ~ condition)
+dds <- DESeq(ddsTxi)
+res <- results(dds)
+vsd <- vst(dds, blind=FALSE)
+ntd <- normTransform(dds)
+
+```
+
+We used the following plots to assess the distribution of the data and the effect of inline deseq normalization:
+
+``` {r}
+
+multiecdf(counts(dds, normalized = F),
+           xlab="mean counts", xlim=c(0, 400))
+multiecdf(counts(dds, normalized = T),
+           xlab="mean counts", xlim=c(0, 400))
+
+multidensity(counts(dds, normalized = F),
+              xlab="mean counts", xlim=c(0, 100))
+multidensity(counts(dds, normalized = T),
+              xlab="mean counts", xlim=c(0, 100))
+
+```
+
+For visual assessment of differentially expressed genes, we used heatmaps and Volcano plot.
+
+``` {}
+select <- order(rowMeans(counts(dds,normalized=TRUE)),
+                decreasing=TRUE)
+df <- as.data.frame(colData(dds)[,c("condition")])
+pheatmap(df)
+pheatmap(assay(ntd)[select,], cluster_rows=F, show_rownames=F,
+         cluster_cols=F, annotation_col=df)
+pheatmap(assay(vst_dds)[select,], cluster_rows=FALSE, show_rownames=FALSE,
+         cluster_cols=FALSE, annotation_col=df)
+
+```
+
+
+``` {r}
+dds <- estimateSizeFactors(dds)
+norm_res <- results(dds)
+EnhancedVolcano(norm_res,
+                lab = rownames(norm_res),
+                x = 'log2FoldChange',
+                y = 'pvalue',
+                col=c('grey30', 'grey30', 'grey30', 'red3'),
+                transcriptLabSize = 0.0)
+
+```
+
+Write results of analysis to the file: 
+
+``` {r}
+write.csv(counts(dds, normalized=TRUE), file = '/media/kremnyov-lab/data2/20080351/fastq/res_norm_annotate')
+
+resOrdered <- res[order(res$pvalue),]
+resOrdered <- as.data.frame(resOrdered)
+resOrderedSign_Minus <- filter(resOrdered, pvalue < 0.05)
+write.csv(resOrderedSign_Minus, file = '/media/kremnyov-lab/data2/20080351/fastq/res_sign_annotate')
+
+write.csv(counts(dds), file = '/media/kremnyov-lab/data2/20080351/fastq/counts')
+
+```
+
+# Analysis of some genes
+
+Analysis of house keepeng genes:
+
+``` {r}
+
+```
+
+Analysis of WNT genes:
+
+``` {r}
+wnt <- read.csv("/media/kremnyov-lab/data2/20080351/fastq/wnt/blast_dyn.fasta", 
+                        sep = "\t", header = F)
+
+wnt_valuable <- subset(wnt, wnt$V11 < 2.00e-100)
+wnt_valuable$gene <- lapply(strsplit(as.character(wnt_valuable$V2), "_"),"[",7)
+wnt_unique <- distinct(wnt_valuable, gene, .keep_all = T)
+wnt_valuable$V2 <- sapply(strsplit(as.character(wnt_valuable$V2), ".p"),"[",1)
+
+wnt_list <- wnt_unique[,c(1, 13)]
+
+dds_wnt = subset(dds, rownames(counts(dds, normalized=TRUE)) %in% wnt_list$gene)
+
+
+ntd_wnt <- normTransform(dds_wnt)
+select <- order(rowMeans(counts(dds_wnt,normalized=TRUE)),
+                decreasing=TRUE)
+df <- as.data.frame(colData(dds_wnt)[,c("condition")])
+
+pheatmap(assay(dds_wnt)[select,], cluster_rows=FALSE, show_rownames=T,
+         cluster_cols=FALSE)
+pheatmap(assay(ntd_wnt)[select,], cluster_rows=FALSE, show_rownames=T,
+         cluster_cols=FALSE)
+```
+
