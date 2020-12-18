@@ -2,6 +2,7 @@
 This reporitorium consist description of pipeline of differential gene expression analysis for non-model hydroid polyp Dynamena pumila.
 
 Aims of the project:
+
 *De novo* assembly and analysis of transcriptomes of the *Dynamena pumila* hydroid polyp at different parts of the colony
 
 Goals of the project:
