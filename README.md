@@ -34,24 +34,23 @@ In this project we used:
 * cd-hit-est (v4.8.1)
   * filtering similar transcripts
 * TransDecoder (v5.5.0)
-** find orf in transcripts
-  * blast (v2.10.1)
-** annotation, target genes founding
-   * Trinotate (3.2.1)
-** annotation pipeline
+ * find orf in transcripts
+* blast (v2.10.1)
+ * annotation, target genes founding
+* Trinotate (3.2.1)
+ * annotation pipeline
 * hmmscan (v03.1b2)
-* salmon (v1.3.0)
-** mapping reads to assembly
+ * mapping reads to assembly
 * tximport
-** import differential expression data to DEseq2 
+ * import differential expression data to DEseq2 
 * DEseq2
-** analysis of differential expression data
+ * analysis of differential expression data
 * pcaExplorer
-** data visualisation
+ * data visualisation
 * EnhancedVolcano
-** data visualisation
+ * data visualisation
 * pheatmap
-** data visualisation
+ * data visualisation
 
 # Citation:
 1.	Alexopoulos, H. et al. (2004) Evolution of gap junctions: the missing link?, Current Biology, 14(20), pp. R879–R880. doi: 10.1016/j.cub.2004.09.067.
