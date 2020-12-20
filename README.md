@@ -51,6 +51,20 @@ This reporitorium consist description of pipeline of differential gene expressio
    * data visualisation
 * pheatmap
    * data visualisation
+   
+### Our results
+
+We prepared the base for the analysis of any genes, which may be involved in growth tip determination:
+* assembled qualified reference transcriptome
+* annotated it
+* counted expression
+* normalized data
+* verified that the data met expectations.
+
+After it, we analyzed housekeepeng genes and WNT repertoire:
+
+[housekeepeng genes]: https://github.com/kupaeva/Dynamena_DGE/blob/main/housekeepeng_genes.png "housekeepeng genes"
+
 
 # Citation:
 1.	Alexopoulos, H. et al. (2004) Evolution of gap junctions: the missing link?, Current Biology, 14(20), pp. R879–R880. doi: 10.1016/j.cub.2004.09.067.
