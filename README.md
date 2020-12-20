@@ -62,8 +62,20 @@ We prepared the base for the analysis of any genes, which may be involved in gro
 * verified that the data met expectations.
 
 After it, we analyzed housekeepeng genes and WNT repertoire:
+We tested the efficiency of digital normalization by the level of expression in different parts of the colony of commonly used housekeeping genes.
+However, not all housekeeping genes are expressed uniformly after normalization. This may be due to the unusual physiology of the growth apex. 
+Expression data for these genes was confirmed by qPCR.
 
 ![housekeepeng genes](https://github.com/kupaeva/Dynamena_DGE/blob/main/housekeepeng_genes.png "housekeepeng genes")
+
+* WNT3, a key cWNT gene, is expressed at a very low level in the hydrant, which may indicate a modification of the cWNT pathway in Dynamena
+* WNT5A, expressed at high levels in the apex and hydrant, but at different levels;
+* WNT8, expressed more strongly at the apex than in the hydrant, and also involved in the noncanonical WNT pathway;
+* unannotated WNT expressed in hydrants at different levels;
+* WNT2 and WNT7, presumably involved in hydrant patterning during development.
+
+![WNT](https://github.com/kupaeva/Dynamena_DGE/blob/main/WNT.png "WNT")
+
 
 
 # Citation:
