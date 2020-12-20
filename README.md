@@ -1,11 +1,11 @@
 # Dynamena_DGE
 This reporitorium consist description of pipeline of differential gene expression analysis for non-model hydroid polyp Dynamena pumila.
 
-Aims of the project:
+### Aims of the project:
 
 *De novo* assembly and analysis of transcriptomes of the *Dynamena pumila* hydroid polyp at different parts of the colony
 
-Goals of the project:
+### Goals of the project:
 
 * Primary data processing
 * Assembling the reference
@@ -16,7 +16,7 @@ Goals of the project:
 * Find something interesting
 
 
-In this project we used:
+### In this project we used:
 * fastp (v0.20.0)    
     * cut adapters, trim data, prepare row reads
 * fastQC (v0.11.5)
