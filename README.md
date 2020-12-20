@@ -74,7 +74,7 @@ Expression data for these genes was confirmed by qPCR.
 * unannotated WNT expressed in hydrants at different levels;
 * WNT2 and WNT7, presumably involved in hydrant patterning during development.
 
-![WNT](https://github.com/kupaeva/Dynamena_DGE/blob/main/WNT.png "WNT")
+![WNT](https://github.com/kupaeva/Dynamena_DGE/blob/main/wnt.png "WNT")
 
 ### Future plans
 
