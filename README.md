@@ -83,7 +83,7 @@ Expression data for these genes was confirmed by qPCR.
 * analyze signaling pathways tgf-beta, other components of wnt, etc.
 * compare the top of the shoot of Dynamena pumila with the top of the growth of colonies with a different organization plan and identify the dominants responsible for determining the type of colony (Gonothyraea loveni)
 * to compare gene expression at the growth apex of Dynamena pumila during normal development and during overactive wnt signaling
-
+ 
 
 # Citation:
 1.	Alexopoulos, H. et al. (2004) Evolution of gap junctions: the missing link?, Current Biology, 14(20), pp. R879–R880. doi: 10.1016/j.cub.2004.09.067.
