@@ -63,7 +63,7 @@ We prepared the base for the analysis of any genes, which may be involved in gro
 
 After it, we analyzed housekeepeng genes and WNT repertoire:
 
-![housekeepeng genes]: (https://github.com/kupaeva/Dynamena_DGE/blob/main/housekeepeng_genes.png "housekeepeng genes")
+![housekeepeng genes](https://github.com/kupaeva/Dynamena_DGE/blob/main/housekeepeng_genes.png "housekeepeng genes")
 
 
 # Citation:
