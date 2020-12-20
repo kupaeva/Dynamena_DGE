@@ -18,39 +18,39 @@ Goals of the project:
 
 In this project we used:
 * fastp (v0.20.0)    
-    * cut adapters, trim data, prepare row reads
+    cut adapters, trim data, prepare row reads
 * fastQC (v0.11.5)
-    * data quality check
+    data quality check
 * kraken2 (v2.0.9)
-    * filtering contamination
+    filtering contamination
 * bbnorm
-    * digital normalization of data
+    digital normalization of data
 * rnaSPAdes (v3.14.1) 
-    * *de novo* transcriptome assembly
+    *de novo* transcriptome assembly
 * BUSCO (v3.6)
-    * assembly quality control
+    assembly quality control
 * trinityrnaseq (v2.8.6)
-    * assembly quality control
+    assembly quality control
 * cd-hit-est (v4.8.1)
-    * filtering similar transcripts
+    filtering similar transcripts
 * TransDecoder (v5.5.0)
-   * find orf in transcripts
+   find orf in transcripts
 * blast (v2.10.1)
-   * annotation, target genes founding
+   annotation, target genes founding
 * Trinotate (3.2.1)
-   * annotation pipeline
+   annotation pipeline
 * hmmscan (v03.1b2)
-   * mapping reads to assembly
+   mapping reads to assembly
 * tximport
-   * import differential expression data to DEseq2 
+   import differential expression data to DEseq2 
 * DEseq2
-   * analysis of differential expression data
+   analysis of differential expression data
 * pcaExplorer
-   * data visualisation
+   data visualisation
 * EnhancedVolcano
-   * data visualisation
+   data visualisation
 * pheatmap
-   * data visualisation
+   data visualisation
 
 # Citation:
 1.	Alexopoulos, H. et al. (2004) Evolution of gap junctions: the missing link?, Current Biology, 14(20), pp. R879–R880. doi: 10.1016/j.cub.2004.09.067.
