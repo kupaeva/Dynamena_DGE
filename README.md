@@ -15,28 +15,29 @@ Goals of the project:
 * Annotate transcriptome
 * Find something interesting
 
+
 In this project we used:
 * fastp (v0.20.0)
-** cut adapters, trim data, prepare row reads
+  * cut adapters, trim data, prepare row reads
 * fastQC (v0.11.5)
-** data quality check
+  * data quality check
 * kraken2 (v2.0.9)
-** filtering contamination
+  * filtering contamination
 * bbnorm
-** digital normalization of data
+  * digital normalization of data
 * rnaSPAdes (v3.14.1) 
-** *de novo* transcriptome assembly
+  * *de novo* transcriptome assembly
 * BUSCO (v3.6)
-** assembly quality control
+  * assembly quality control
 * trinityrnaseq (v2.8.6)
-** assembly quality control
+  * assembly quality control
 * cd-hit-est (v4.8.1)
-** filtering similar transcripts
+  * filtering similar transcripts
 * TransDecoder (v5.5.0)
 ** find orf in transcripts
-* blast (v2.10.1)
+  * blast (v2.10.1)
 ** annotation, target genes founding
-* Trinotate (3.2.1)
+   * Trinotate (3.2.1)
 ** annotation pipeline
 * hmmscan (v03.1b2)
 * salmon (v1.3.0)
