@@ -58,7 +58,7 @@ This reporitorium consist description of pipeline of differential gene expressio
 3.	Bagaeva, T. S. et al. (2019) сWnt signaling modulation results in a change of the colony architecture in a hydrozoan, Developmental Biology, 456(2). doi: 10.1016/j.ydbio.2019.08.019.
 4.	Blighe K, Rana S, Lewis M (2020). EnhancedVolcano: Publication-ready volcano plots with enhanced colouring and labeling. R package version 1.8.0, https://github.com/kevinblighe/EnhancedVolcano.
 5.	Bryant, D. M. et al. (2017) A Tissue-Mapped Axolotl De Novo Transcriptome Enables Identification of Limb Regeneration Factors, Cell Reports. Elsevier B.V., 18(3), pp. 762–776. doi: 10.1016/j.celrep.2016.12.063.
-6.	Bushnell, B. (no date) BBTools.
+6.	Bushnell, B. https://jgi.doe.gov/data-and-tools/bbtools/ BBTools.
 7.	Chen, S. et al. (2018) fastp: an ultra-fast all-in-one FASTQ preprocessor, Bioinformatics. Oxford University Press, 34(17), pp. i884–i890. doi: 10.1093/bioinformatics/bty560.
 8.	Grabherr, M. G. et al. (2011) Full-length transcriptome assembly from RNA-Seq data without a reference genome, Nature Biotechnology. NIH Public Access, 29(7), pp. 644–652. doi: 10.1038/nbt.1883.
 9.	Hensel, K. et al. (2014) Lineage-specific evolution of cnidarian Wnt ligands, Evolution and Development, 16(5), pp. 259–269. doi: 10.1111/ede.12089.
