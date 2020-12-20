@@ -76,6 +76,13 @@ Expression data for these genes was confirmed by qPCR.
 
 ![WNT](https://github.com/kupaeva/Dynamena_DGE/blob/main/WNT.png "WNT")
 
+### Future plans
+
+* look for antimicrobial peptides
+* look at the components of the nervous system and make sure that they are absent from the nervous system
+* analyze signaling pathways tgf-beta, other components of wnt, etc.
+* compare the top of the shoot of Dynamena pumila with the top of the growth of colonies with a different organization plan and identify the dominants responsible for determining the type of colony (Gonothyraea loveni)
+* to compare gene expression at the growth apex of Dynamena pumila during normal development and during overactive wnt signaling
 
 
 # Citation:
