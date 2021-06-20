@@ -1,5 +1,5 @@
 # Dynamena_DGE
-This reporitorium consist description of pipeline of differential gene expression analysis for non-model hydroid polyp Dynamena pumila.
+This reporitorium consist description of pipeline of differential gene expression analysis for non-model hydroid polyp *Dynamena pumila*.
 
 ### Aims of the project:
 
@@ -68,7 +68,7 @@ Expression data for these genes was confirmed by qPCR.
 
 ![housekeepeng genes](https://github.com/kupaeva/Dynamena_DGE/blob/main/housekeepeng_genes.png "housekeepeng genes")
 
-* WNT3, a key cWNT gene, is expressed at a very low level in the hydrant, which may indicate a modification of the cWNT pathway in Dynamena
+* WNT3, a key cWNT gene, is expressed at a very low level in the hydrant, which may indicate a modification of the cWNT pathway in *Dynamena*
 * WNT5A, expressed at high levels in the apex and hydrant, but at different levels;
 * WNT8, expressed more strongly at the apex than in the hydrant, and also involved in the noncanonical WNT pathway;
 * unannotated WNT expressed in hydrants at different levels;
@@ -81,8 +81,8 @@ Expression data for these genes was confirmed by qPCR.
 * look for antimicrobial peptides
 * look at the components of the nervous system and make sure that they are absent from the nervous system
 * analyze signaling pathways tgf-beta, other components of wnt, etc.
-* compare the top of the shoot of Dynamena pumila with the top of the growth of colonies with a different organization plan and identify the dominants responsible for determining the type of colony (Gonothyraea loveni)
-* to compare gene expression at the growth apex of Dynamena pumila during normal development and during overactive wnt signaling
+* compare the top of the shoot of *Dynamena pumila* with the top of the growth of colonies with a different organization plan and identify the dominants responsible for determining the type of colony (*Gonothyraea loveni*)
+* to compare gene expression at the growth apex of *Dynamena pumila* during normal development and during overactive wnt signaling
  
 
 # Citation:
